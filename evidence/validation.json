@@ -1,0 +1,105 @@
+{
+  "version": "0.1.1",
+  "uuid": "037352f7-e3ea-4e4e-8d5d-5c823a12e494",
+  "pbwSHA256": "5be3c545b1d099c84877630d761350e0d70248103492deb3efe8ba12ff0a88c2",
+  "sourceZipSHA256": "4346741b56918cbc80db55885b65182efd6efe3eaf8e8eb5e1b8c24c01fc515b",
+  "platforms": {
+    "basalt": {
+      "capturedAt": "2026-09-06T06:23:25.050424+00:00",
+      "dimensions": [
+        144,
+        168
+      ],
+      "secondsChanged": true,
+      "naturalNoonRollover": true,
+      "naturalMidnightRollover": true,
+      "nativeFrameCount": 26,
+      "loggedRenderMS": {
+        "min": 4,
+        "max": 12
+      },
+      "minimumLoggedFreeHeapBytes": 57300
+    },
+    "diorite": {
+      "capturedAt": "2026-09-06T06:21:13.070445+00:00",
+      "dimensions": [
+        144,
+        168
+      ],
+      "secondsChanged": true,
+      "naturalNoonRollover": true,
+      "naturalMidnightRollover": true,
+      "nativeFrameCount": 26,
+      "loggedRenderMS": {
+        "min": 4,
+        "max": 12
+      },
+      "minimumLoggedFreeHeapBytes": 57596
+    },
+    "emery": {
+      "capturedAt": "2026-09-06T06:20:27.135342+00:00",
+      "dimensions": [
+        200,
+        228
+      ],
+      "secondsChanged": true,
+      "naturalNoonRollover": true,
+      "naturalMidnightRollover": true,
+      "nativeFrameCount": 26,
+      "loggedRenderMS": {
+        "min": 13,
+        "max": 21
+      },
+      "minimumLoggedFreeHeapBytes": 122836
+    },
+    "flint": {
+      "capturedAt": "2026-09-06T06:24:10.073987+00:00",
+      "dimensions": [
+        144,
+        168
+      ],
+      "secondsChanged": true,
+      "naturalNoonRollover": true,
+      "naturalMidnightRollover": true,
+      "nativeFrameCount": 26,
+      "loggedRenderMS": {
+        "min": 3,
+        "max": 8
+      },
+      "minimumLoggedFreeHeapBytes": 57596
+    },
+    "chalk": {
+      "capturedAt": "2026-09-06T06:21:56.905815+00:00",
+      "dimensions": [
+        180,
+        180
+      ],
+      "secondsChanged": true,
+      "naturalNoonRollover": true,
+      "naturalMidnightRollover": true,
+      "nativeFrameCount": 26,
+      "loggedRenderMS": {
+        "min": 4,
+        "max": 15
+      },
+      "minimumLoggedFreeHeapBytes": 57300
+    },
+    "gabbro": {
+      "capturedAt": "2026-09-06T06:22:41.141147+00:00",
+      "dimensions": [
+        260,
+        260
+      ],
+      "secondsChanged": true,
+      "naturalNoonRollover": true,
+      "naturalMidnightRollover": true,
+      "nativeFrameCount": 26,
+      "loggedRenderMS": {
+        "min": 15,
+        "max": 22
+      },
+      "minimumLoggedFreeHeapBytes": 122836
+    }
+  },
+  "limits": "Local emulator-tested review candidate. Native PNGs require visual inspection. Not physical-watch power/readability evidence, CloudPebble import proof, or a store release."
+}

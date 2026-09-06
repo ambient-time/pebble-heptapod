@@ -1,0 +1,327 @@
+{
+  "face": "heptapod",
+  "version": "0.1.1",
+  "sourceZipSHA256": "4346741b56918cbc80db55885b65182efd6efe3eaf8e8eb5e1b8c24c01fc515b",
+  "productionPBWSHA256": "5be3c545b1d099c84877630d761350e0d70248103492deb3efe8ba12ff0a88c2",
+  "independentPBWSHA256": "54a134b64ea8c82307136f2de0e9b254172066ff15a6baeed96d33da38b041cb",
+  "checkedAt": "2026-09-06T20:04:00.666335+00:00",
+  "sdk": "4.33.1",
+  "hostTestsPassed": true,
+  "sixTargetBuildPassed": true,
+  "appMetadataIdentical": true,
+  "command": [
+    "make",
+    "build",
+    "PEBBLE=/Users/luke/.local/bin/pebble",
+    "PYTHON=/Users/luke/.local/share/uv/tools/pebble-tool/bin/python"
+  ],
+  "payloadChecks": {
+    "basalt": {
+      "resourcesIdentical": true,
+      "resourceSHA256": "decbbb7b460c7cadb6c905f68d15e0fc13d4fe7f772eba826a4204f550b40fcb",
+      "codeIdenticalOutsideCRCResourceTimestampAndGNUBuildID": true,
+      "normalizedBinarySHA256": "c98c2939b576552d22fd557286a946e787e810fc8a981297ed45292993a90a75",
+      "changedCodeByteOffsets": [
+        20,
+        21,
+        22,
+        23,
+        124,
+        125,
+        148,
+        149,
+        150,
+        151,
+        152,
+        153,
+        154,
+        155,
+        156,
+        157,
+        158,
+        159,
+        160,
+        161,
+        162,
+        163,
+        164,
+        165,
+        166,
+        167
+      ],
+      "ignoredFields": [
+        {
+          "offset": "0x14",
+          "bytes": 4,
+          "meaning": "verified internal CRC"
+        },
+        {
+          "offset": "0x7c",
+          "bytes": 4,
+          "meaning": "SDK resource timestamp"
+        },
+        {
+          "offset": "0x94",
+          "bytes": 20,
+          "meaning": "GNU build-ID payload after verified note header"
+        }
+      ]
+    },
+    "diorite": {
+      "resourcesIdentical": true,
+      "resourceSHA256": "decbbb7b460c7cadb6c905f68d15e0fc13d4fe7f772eba826a4204f550b40fcb",
+      "codeIdenticalOutsideCRCResourceTimestampAndGNUBuildID": true,
+      "normalizedBinarySHA256": "36c5a936b91bc638dba00b014ae7404dddb7cf8334140e8a261242f78935aafc",
+      "changedCodeByteOffsets": [
+        20,
+        21,
+        22,
+        23,
+        124,
+        125,
+        148,
+        149,
+        150,
+        151,
+        152,
+        153,
+        154,
+        155,
+        156,
+        157,
+        158,
+        159,
+        160,
+        161,
+        162,
+        163,
+        164,
+        165,
+        166,
+        167
+      ],
+      "ignoredFields": [
+        {
+          "offset": "0x14",
+          "bytes": 4,
+          "meaning": "verified internal CRC"
+        },
+        {
+          "offset": "0x7c",
+          "bytes": 4,
+          "meaning": "SDK resource timestamp"
+        },
+        {
+          "offset": "0x94",
+          "bytes": 20,
+          "meaning": "GNU build-ID payload after verified note header"
+        }
+      ]
+    },
+    "emery": {
+      "resourcesIdentical": true,
+      "resourceSHA256": "decbbb7b460c7cadb6c905f68d15e0fc13d4fe7f772eba826a4204f550b40fcb",
+      "codeIdenticalOutsideCRCResourceTimestampAndGNUBuildID": true,
+      "normalizedBinarySHA256": "2417d2ef52ecb2bc6edbf0396154a063ff382283746dd8352dc55a8199bd6b5b",
+      "changedCodeByteOffsets": [
+        20,
+        21,
+        22,
+        23,
+        124,
+        125,
+        148,
+        149,
+        150,
+        151,
+        152,
+        153,
+        154,
+        155,
+        156,
+        157,
+        158,
+        159,
+        160,
+        161,
+        162,
+        163,
+        164,
+        165,
+        166,
+        167
+      ],
+      "ignoredFields": [
+        {
+          "offset": "0x14",
+          "bytes": 4,
+          "meaning": "verified internal CRC"
+        },
+        {
+          "offset": "0x7c",
+          "bytes": 4,
+          "meaning": "SDK resource timestamp"
+        },
+        {
+          "offset": "0x94",
+          "bytes": 20,
+          "meaning": "GNU build-ID payload after verified note header"
+        }
+      ]
+    },
+    "flint": {
+      "resourcesIdentical": true,
+      "resourceSHA256": "decbbb7b460c7cadb6c905f68d15e0fc13d4fe7f772eba826a4204f550b40fcb",
+      "codeIdenticalOutsideCRCResourceTimestampAndGNUBuildID": true,
+      "normalizedBinarySHA256": "40ae9d379607151ac7126cbcefb1baf186616042f5c96e3ecda62c509b70369e",
+      "changedCodeByteOffsets": [
+        20,
+        21,
+        22,
+        23,
+        124,
+        125,
+        148,
+        149,
+        150,
+        151,
+        152,
+        153,
+        154,
+        155,
+        156,
+        157,
+        158,
+        159,
+        160,
+        161,
+        162,
+        163,
+        164,
+        165,
+        166,
+        167
+      ],
+      "ignoredFields": [
+        {
+          "offset": "0x14",
+          "bytes": 4,
+          "meaning": "verified internal CRC"
+        },
+        {
+          "offset": "0x7c",
+          "bytes": 4,
+          "meaning": "SDK resource timestamp"
+        },
+        {
+          "offset": "0x94",
+          "bytes": 20,
+          "meaning": "GNU build-ID payload after verified note header"
+        }
+      ]
+    },
+    "chalk": {
+      "resourcesIdentical": true,
+      "resourceSHA256": "decbbb7b460c7cadb6c905f68d15e0fc13d4fe7f772eba826a4204f550b40fcb",
+      "codeIdenticalOutsideCRCResourceTimestampAndGNUBuildID": true,
+      "normalizedBinarySHA256": "2350bf0cdd5ba0e2309f43175e7e70dd7645e115895f3709812a1fd90f694564",
+      "changedCodeByteOffsets": [
+        20,
+        21,
+        22,
+        23,
+        124,
+        125,
+        148,
+        149,
+        150,
+        151,
+        152,
+        153,
+        154,
+        155,
+        156,
+        157,
+        158,
+        159,
+        160,
+        161,
+        162,
+        163,
+        164,
+        165,
+        166,
+        167
+      ],
+      "ignoredFields": [
+        {
+          "offset": "0x14",
+          "bytes": 4,
+          "meaning": "verified internal CRC"
+        },
+        {
+          "offset": "0x7c",
+          "bytes": 4,
+          "meaning": "SDK resource timestamp"
+        },
+        {
+          "offset": "0x94",
+          "bytes": 20,
+          "meaning": "GNU build-ID payload after verified note header"
+        }
+      ]
+    },
+    "gabbro": {
+      "resourcesIdentical": true,
+      "resourceSHA256": "decbbb7b460c7cadb6c905f68d15e0fc13d4fe7f772eba826a4204f550b40fcb",
+      "codeIdenticalOutsideCRCResourceTimestampAndGNUBuildID": true,
+      "normalizedBinarySHA256": "9d469e6d81dac9455a607dd8ee583fac84bd4615c6d716d7b121e127638a2363",
+      "changedCodeByteOffsets": [
+        20,
+        21,
+        22,
+        23,
+        124,
+        125,
+        149,
+        150,
+        151,
+        152,
+        153,
+        154,
+        155,
+        156,
+        157,
+        158,
+        159,
+        160,
+        161,
+        162,
+        163,
+        164,
+        165,
+        166,
+        167
+      ],
+      "ignoredFields": [
+        {
+          "offset": "0x14",
+          "bytes": 4,
+          "meaning": "verified internal CRC"
+        },
+        {
+          "offset": "0x7c",
+          "bytes": 4,
+          "meaning": "SDK resource timestamp"
+        },
+        {
+          "offset": "0x94",
+          "bytes": 20,
+          "meaning": "GNU build-ID payload after verified note header"
+        }
+      ]
+    }
+  },
+  "buildLog": "independent-build.log",
+  "scope": "Fresh extraction of the final root-level source ZIP into a separate temporary directory. All six native targets build, host sanitizer tests pass, app metadata and resource payloads match exactly. Application bytes match outside verified CRC, SDK resource timestamp, and GNU build-ID fields. No emulator or physical watch was used for this rebuild."
+}

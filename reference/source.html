@@ -1,0 +1,470 @@
+<!doctype html>
+<!--
+  Heptapod B: Local time as a Heptapod B logogram from Arrival: a circular ring of ink whose thickening arcs and tendrils mark the…
+  A clock from Luke Steuber's gallery: https://datapoems.io/clocks/heptapod/
+  Author: Luke Steuber · lukesteuber.com · @lukesteuber.com (Bluesky)
+  Copyright 2026 Luke Steuber. MIT License. Reuse freely, keep this credit.
+  Libraries loaded from a CDN (if any) keep their own licenses.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Heptapod B</title>
+<meta name="description" content="Local time as a Heptapod B logogram from Arrival: a circular ring of ink whose thickening arcs and tendrils mark the hour, minute and second around the rim, twelve at the top. The exact time is shown and announced.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Heptapod B">
+<meta property="og:description" content="Local time as a circular Heptapod B ink logogram from Arrival: arcs and tendrils mark the hour, minute and second around the ring.">
+<meta property="og:url" content="https://datapoems.io/clocks/heptapod/">
+<meta property="og:image" content="https://datapoems.io/clocks/heptapod/social-card.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Heptapod B">
+<meta name="twitter:description" content="Local time as a circular Heptapod B ink logogram from Arrival.">
+<meta name="twitter:image" content="https://datapoems.io/clocks/heptapod/social-card.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root { --accent: #9fe8ff; --bg: #050a0e; --bg2: #0a141a; --ink: rgba(214,240,250,0.86); }
+  html, body { width: 100%; height: 100%; background: var(--bg); overflow: hidden; font-family: 'JetBrains Mono', ui-monospace, monospace; }
+  #scene { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+  /* the screen is milky white, so the synthesized "?" needs dark ink, not cyan */
+  .about-help-auto { color: #3b4147 !important; }
+</style>
+</head>
+<body>
+  <canvas id="scene" role="img"
+    aria-label="The current local time as a Heptapod B logogram from the film Arrival: a circular ring of ink, with twelve at the top. A long arc and tendril mark the hour around the rim, a medium one the minute, and a short bright one the second, each at its clock angle. The exact time is shown beneath and announced once a minute."></canvas>
+  <div class="sr-only" id="sr" aria-live="polite">Loading clock.</div>
+
+<script>
+(function () {
+  "use strict";
+  var canvas = document.getElementById('scene');
+  var ctx = canvas.getContext('2d');
+  var sr = document.getElementById('sr');
+  var embedded = (window.self !== window.top);
+  function pad2(n) { return n < 10 ? '0' + n : '' + n; }
+
+  var DPR = 1, W = 0, H = 0;
+  var gc = document.createElement('canvas'), gx = gc.getContext('2d');   // offscreen ink layer
+  function resize() {
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    var r = canvas.getBoundingClientRect();
+    W = Math.max(1, Math.round(r.width)); H = Math.max(1, Math.round(r.height));
+    canvas.width = Math.round(W * DPR); canvas.height = Math.round(H * DPR);
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    gc.width = canvas.width; gc.height = canvas.height; gx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  }
+  window.addEventListener('resize', resize);
+  window.addEventListener('orientationchange', function () { requestAnimationFrame(resize); });
+
+  // ---- Heptapod B glyph, inked with perfect-freehand --------------------------
+  // Black sumi ink, the way Arrival's logograms actually read: a BROKEN ring of
+  // several overlapping brush arcs with gaps between them (no clean closed loop),
+  // its weight pooling thick then thinning to nothing, dressed with a chaotic
+  // crowd of tendrils, hooks and blots. Drawn once to an offscreen layer, then
+  // composited under two smoke passes so it mists into the backlit screen. The
+  // hour/minute/second are three of the boldest tendrils.
+  var TAU = Math.PI * 2, INK = 'rgba(26,19,14,';   // warm sepia-black sumi ink
+  var NOW_T = 0;                                    // current frame time, for drift
+  var getStroke = null;
+  import('https://esm.sh/perfect-freehand@1.2.2').then(function (m) { getStroke = m.getStroke; }).catch(function () {});
+  // the ring as separate brush arcs: [startAngle, endAngle, weight, radiusOffset]
+  // — gaps between some, overlaps at others, so the loop never quite closes.
+  var ARCS = [
+    [-0.42, 1.30, 0.95, 0.16], [1.52, 2.66, 0.5, -0.5], [2.55, 4.22, 0.82, 0.42],
+    [4.10, 4.55, 0.4, 0.9], [4.74, 5.55, 0.62, -0.28], [5.42, 6.18, 0.78, 0.3]
+  ];
+  // a chaotic crowd of flourishes: [angle, lenFrac, curl, sizeFrac, dir(+out/-in)]
+  // — big |curl| hooks back on itself; dir -1 reaches inward.
+  var FLOUR = [
+    [0.42, 0.52, 0.85, 0.046, 1], [0.86, 0.24, -1.9, 0.03, 1], [1.62, 0.40, 0.6, 0.04, 1],
+    [2.08, 0.16, 1.7, 0.026, -1], [2.72, 0.56, -0.72, 0.05, 1], [3.30, 0.30, 1.35, 0.034, 1],
+    [3.86, 0.22, -2.0, 0.03, 1], [4.50, 0.48, 0.7, 0.045, 1], [5.16, 0.18, 1.6, 0.028, -1],
+    [5.74, 0.42, -0.8, 0.04, 1], [1.05, 0.30, 1.1, 0.03, 1], [3.05, 0.14, 1.9, 0.024, -1]
+  ];
+  // ink blots scattered near the rim: [angle, offFrac(+out/-in), sizeFrac]
+  var DOTS = [[0.95, 0.17, 0.022], [1.95, -0.12, 0.015], [2.85, 0.2, 0.018], [4.05, 0.15, 0.02], [4.95, -0.14, 0.013], [5.6, 0.22, 0.016]];
+
+  function inkFill(c, pts, opt) {
+    if (!getStroke) return;
+    var o = getStroke(pts, opt);
+    if (o.length < 3) return;
+    c.beginPath(); c.moveTo(o[0][0], o[0][1]);
+    for (var i = 1; i < o.length; i++) c.lineTo(o[i][0], o[i][1]);
+    c.closePath(); c.fill();
+  }
+
+  // one brush arc of the broken ring: thick in the middle, tapering to nothing at
+  // both ends so the gaps read as lifted-brush breaks; a wandering radius gives
+  // the coffee-stain wobble.
+  function arc(c, cx, cy, R, a0, a1, w, rOff) {
+    var pts = [], S = Math.max(10, Math.round(Math.abs(a1 - a0) * 16));
+    for (var i = 0; i <= S; i++) {
+      var u = i / S, a = a0 + (a1 - a0) * u;
+      var wob = 0.018 * Math.sin(a * 3 + rOff * 5) + 0.011 * Math.sin(a * 7 + 1.3)
+              + 0.006 * Math.sin(a * 5 - NOW_T / 950 + rOff * 4);  // slow smoke crawl
+      var rr = R * (1 + rOff * 0.05 + wob);
+      var pr = w * (0.22 + 0.78 * Math.pow(Math.sin(Math.PI * u), 0.55));
+      pts.push([cx + Math.cos(a) * rr, cy + Math.sin(a) * rr, Math.min(1, pr)]);
+    }
+    inkFill(c, pts, { size: R * 0.165, thinning: 0.62, smoothing: 0.7, streamline: 0.55, simulatePressure: false });
+  }
+  function ring(c, cx, cy, R) { for (var k = 0; k < ARCS.length; k++) arc(c, cx, cy, R, ARCS[k][0], ARCS[k][1], ARCS[k][2], ARCS[k][3]); }
+
+  // a calligraphic tendril curving off the rim, tapering to a point (hooks back if curl is large)
+  function flourish(c, cx, cy, R, a, len, curl, size, dir) {
+    var pts = [], S = 16;
+    for (var i = 0; i <= S; i++) {
+      var u = i / S;
+      // tip sways more than the base, as a tendril floating in the mist
+      var aa = a + curl * u + 0.045 * Math.sin(NOW_T / 1250 + a * 1.7) * u;
+      var rr = R + dir * len * u + R * 0.01 * Math.sin(NOW_T / 1700 + a) * u;
+      pts.push([cx + Math.cos(aa) * rr, cy + Math.sin(aa) * rr, Math.pow(1 - u, 0.7)]);
+    }
+    inkFill(c, pts, { size: size, thinning: 0.8, smoothing: 0.72, streamline: 0.62, simulatePressure: false });
+  }
+
+  function drawGlyph(c, cx, cy, R, hf, mf, sf) {
+    if (!getStroke) {
+      c.strokeStyle = INK + '0.85)'; c.lineWidth = R * 0.045;
+      c.beginPath(); c.arc(cx, cy, R, 0.2, TAU - 0.3); c.stroke(); return;
+    }
+    c.fillStyle = INK + '0.97)'; c.lineJoin = 'round';
+    ring(c, cx, cy, R);
+    FLOUR.forEach(function (d) { flourish(c, cx, cy, R, d[0], R * d[1], d[2], R * d[3], d[4]); });
+    DOTS.forEach(function (d) {
+      var rr = R * (1 + d[1]), x = cx + Math.cos(d[0]) * rr, y = cy + Math.sin(d[0]) * rr;
+      c.beginPath(); c.arc(x, y, R * d[2], 0, TAU); c.fill();
+    });
+    function ang(f) { return f * TAU - Math.PI / 2; }
+    flourish(c, cx, cy, R, ang(hf), R * 0.6, -0.5, R * 0.05, 1);    // hour
+    flourish(c, cx, cy, R, ang(mf), R * 0.46, 0.55, R * 0.042, 1);  // minute
+    flourish(c, cx, cy, R, ang(sf), R * 0.32, -0.7, R * 0.032, 1);  // second
+  }
+
+  var lastSR = -1;
+  function tick(t) {
+    t = t || 0;
+    NOW_T = t;
+    var now = new Date();
+    var h = now.getHours(), m = now.getMinutes(), s = now.getSeconds(), ms = now.getMilliseconds();
+    var cx = W / 2, cy = H / 2 - (embedded ? 0 : Math.min(W, H) * 0.04);
+    var R = Math.min(W, H) * 0.3;
+
+    // a cold backlit fog screen: milky grey, brightest behind the glyph, sinking
+    // to a vignetted charcoal mist, with slow-drifting cloud structure inside it.
+    var bg = ctx.createRadialGradient(cx, cy, R * 0.1, cx, cy, Math.max(W, H) * 0.9);
+    bg.addColorStop(0, '#e7ecec'); bg.addColorStop(0.5, '#ccd3d6'); bg.addColorStop(1, '#9aa3a8');
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+    // drifting fog banks — soft grey blobs wandering on slow sines
+    var CLOUDS = [[0.32, 0.30, 0.55, 4300, 0.10], [0.72, 0.66, 0.70, 5600, 0.09],
+                  [0.50, 0.20, 0.45, 3700, 0.08], [0.60, 0.85, 0.60, 6400, 0.07]];
+    for (var ci = 0; ci < CLOUDS.length; ci++) {
+      var cl = CLOUDS[ci];
+      var px = (cl[0] + 0.05 * Math.sin(t / cl[3] + ci)) * W;
+      var py = (cl[1] + 0.05 * Math.cos(t / (cl[3] * 0.8) + ci * 1.7)) * H;
+      var rad = cl[2] * Math.max(W, H);
+      var g2 = ctx.createRadialGradient(px, py, 0, px, py, rad);
+      g2.addColorStop(0, 'rgba(122,130,136,' + cl[4] + ')'); g2.addColorStop(1, 'rgba(122,130,136,0)');
+      ctx.fillStyle = g2; ctx.fillRect(0, 0, W, H);
+    }
+    // atmospheric vignette
+    var vg = ctx.createRadialGradient(cx, cy, R * 0.6, cx, cy, Math.max(W, H) * 0.78);
+    vg.addColorStop(0, 'rgba(38,44,50,0)'); vg.addColorStop(1, 'rgba(38,44,50,0.34)');
+    ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);
+
+    var hf = ((h % 12) + m / 60) / 12, mf = (m + s / 60) / 60, sf = (s + ms / 1000) / 60;
+    var br = Math.sin(t / 1600) * 0.006;
+
+    // ink the whole glyph once on the offscreen layer
+    gx.setTransform(DPR, 0, 0, DPR, 0, 0); gx.clearRect(0, 0, W, H);
+    drawGlyph(gx, cx, cy, R * (1 + br), hf, mf, sf);
+
+    // suspended-smoke drift: the whole glyph slowly wanders and turns a little, as
+    // ink hanging in still air. Composited as soft smoke passes under a near-opaque
+    // core whose outer edge stays diffuse (the film never shows a crisp vector edge).
+    var dx = R * (0.03 * Math.sin(t / 4200) + 0.013 * Math.sin(t / 2300 + 1.1));
+    var dy = R * (0.028 * Math.cos(t / 3700) + 0.012 * Math.cos(t / 2600 + 0.6));
+    var rot = 0.022 * Math.sin(t / 5200) + 0.008 * Math.sin(t / 3100 + 2.0);
+    var shimmer = 0.04 * Math.sin(t / 1400);
+    ctx.save();
+    ctx.translate(cx + dx, cy + dy); ctx.rotate(rot); ctx.translate(-cx, -cy);
+    ctx.globalAlpha = 0.30 + shimmer; ctx.filter = 'blur(' + (R * 0.16) + 'px)'; ctx.drawImage(gc, 0, 0, W, H);
+    ctx.globalAlpha = 0.52; ctx.filter = 'blur(' + (R * 0.06) + 'px)'; ctx.drawImage(gc, 0, 0, W, H);
+    ctx.globalAlpha = 0.90 - shimmer * 0.5; ctx.filter = 'blur(' + (R * 0.01) + 'px)'; ctx.drawImage(gc, 0, 0, W, H);
+    ctx.filter = 'none'; ctx.restore();
+
+    if (!embedded) {
+      ctx.fillStyle = 'rgba(44,48,54,0.5)';
+      ctx.font = '600 ' + Math.max(13, Math.round(R * 0.12)) + 'px "JetBrains Mono", monospace';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(pad2(h) + ' : ' + pad2(m) + ' : ' + pad2(s), cx, cy + R * 1.62);
+    }
+
+    if (m !== lastSR) { lastSR = m; sr.textContent = pad2(h) + ':' + pad2(m) + ' local time, as a Heptapod B logogram.'; }
+    requestAnimationFrame(tick);
+  }
+  resize(); tick();
+})();
+</script>
+<script>window.aboutClock = {
+  title: 'Heptapod B',
+  board: { label: 'Circles', href: '/clocks/circles/' },
+  body: '<p>In the film Arrival the aliens, called heptapods, write in Heptapod B: circular logograms of smoky ink, each a whole thought laid down at once rather than read left to right. This clock borrows that circular form.</p>'
+      + '<p>One ink ring holds the time. Twelve is at the top and time runs clockwise. A long, heavy arc with a tendril marks the hour around the rim, a medium arc the minute, and a short bright one the second. The plain time reads underneath.</p>'
+      + '<p>The script was designed for the film by Martine Bertrand and Patrice Vermette around the idea that the heptapods, seeing time all at once, would write in closed loops with no beginning or end.</p>'
+      + '<p>The wet ink here is drawn with <a href="https://github.com/steveruizok/perfect-freehand" target="_blank" rel="noopener">perfect-freehand</a>: the ring and every tendril are pressure-tapered brush strokes, swelling and fraying to a point.</p>'
+};</script>
+<!--inlined:about-modal.js-->
+<script>
+/* about-modal.js — a drop-in "?" explainer for a clock.
+ *
+ * Usage: set the config, then load this file (no build step, no other deps):
+ *   <script>window.aboutClock = { title: 'Maya', body: '<p>…</p>' };<\/script>
+ *   <script src="/clocks/shared/about-modal.js"><\/script>
+ *
+ * If the page already has a `.help` "?" control it upgrades that in place:
+ * clicking it opens an accessible dialog explaining the clock instead of
+ * navigating away (the original href stays as a no-JS fallback). If there is
+ * NO `.help` control, it synthesizes its own house-styled "?" button (top
+ * right) so any clock becomes self-documenting by just including the script.
+ * The synthesized button only appears in the standalone full-page view, never
+ * inside a gallery preview iframe (window.self === window.top), matching the
+ * GoatCounter gate used elsewhere.
+ *
+ * Theming: the dialog reads the page's --accent / --bg / --ink custom
+ * properties when present, falling back to the house phosphor palette.
+ */
+(function () {
+  'use strict';
+
+  var cfg = window.aboutClock;
+  if (!cfg || (!cfg.body && !(cfg.pages && cfg.pages.length))) return;
+
+  function onReady(fn) {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', fn);
+    } else {
+      fn();
+    }
+  }
+
+  onReady(function () {
+    var trigger = document.querySelector('.help:not(.dice)') || document.querySelector('.help');
+    if (!trigger) {
+      // No "?" control on the page: synthesize one, but only in the standalone
+      // full-page view — it would be dead weight inside a gallery preview iframe.
+      if (window.self !== window.top) return;
+      var hs = document.createElement('style');
+      hs.textContent =
+        ".about-help-auto{position:fixed;top:max(.6rem,env(safe-area-inset-top));" +
+        "right:max(.6rem,env(safe-area-inset-right));z-index:30;display:flex;" +
+        "align-items:center;justify-content:center;min-width:44px;min-height:44px;" +
+        "background:none;border:none;cursor:pointer;color:var(--accent,#5cd9ff);" +
+        "opacity:.55;font:700 19px/1 'Atkinson Hyperlegible',ui-sans-serif,sans-serif;" +
+        "border-radius:6px;transition:opacity .25s ease;}" +
+        ".about-help-auto:hover,.about-help-auto:focus-visible{opacity:1;}" +
+        ".about-help-auto:focus-visible{outline:2px solid currentColor;outline-offset:3px;}";
+      document.head.appendChild(hs);
+      trigger = document.createElement('button');
+      trigger.type = 'button';
+      trigger.className = 'about-help-auto';
+      trigger.setAttribute('aria-label', 'About this clock');
+      trigger.textContent = '?';
+      document.body.appendChild(trigger);
+    }
+
+    // load the reading font (Atkinson Hyperlegible, as used across the other
+    // projects) so explanatory prose never falls back to the console mono.
+    if (!document.querySelector('link[data-about-font]')) {
+      var fl = document.createElement('link');
+      fl.rel = 'stylesheet';
+      fl.setAttribute('data-about-font', '');
+      fl.href = 'https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap';
+      document.head.appendChild(fl);
+    }
+
+    // ---- styles (injected once) ----------------------------------------
+    var css =
+      '.about-backdrop[hidden]{display:none;}' +
+      '.about-backdrop{position:fixed;inset:0;z-index:1000;display:flex;' +
+      'align-items:center;justify-content:center;padding:24px;' +
+      'background:rgba(2,5,11,0.40);backdrop-filter:blur(8px);' +
+      'opacity:0;transition:opacity .34s ease;}' +
+      '.about-backdrop[data-open]{opacity:1;}' +
+      '.about-card{position:relative;max-width:30rem;width:100%;' +
+      'max-height:calc(100vh - 48px);overflow:auto;' +
+      'background:var(--bg2, var(--bg, #060a14));' +
+      'border:1px solid rgba(150,154,168,0.18);border-radius:12px;' +
+      'box-shadow:0 18px 60px rgba(0,0,0,0.5);' +
+      'padding:26px 26px 20px;' +
+      "font-family:'Atkinson Hyperlegible', ui-sans-serif, system-ui, -apple-system, sans-serif;" +
+      'color:var(--ink, rgba(255,255,255,0.82));' +
+      'transform:translateY(10px);transition:transform .34s ease;}' +
+      '.about-backdrop[data-open] .about-card{transform:none;}' +
+      '.about-card h2{margin:0 0 12px;font-size:13px;font-weight:700;' +
+      'letter-spacing:0.34em;text-transform:uppercase;' +
+      'color:var(--accent, #5cd9ff);padding-right:32px;}' +
+      '.about-card p{margin:0 0 11px;font-size:13px;line-height:1.62;' +
+      'letter-spacing:0.01em;color:var(--ink, rgba(255,255,255,0.82));}' +
+      '.about-body a{color:var(--accent, #5cd9ff);text-decoration:underline;' +
+      'text-decoration-thickness:1px;text-underline-offset:2px;font-weight:600;' +
+      'border-radius:2px;transition:opacity .2s ease;}' +
+      '.about-body a:hover,.about-body a:focus-visible{text-decoration-thickness:2px;opacity:0.82;}' +
+      '.about-pages{display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;' +
+      '-webkit-overflow-scrolling:touch;scrollbar-width:none;margin:0 -26px;}' +
+      '.about-pages::-webkit-scrollbar{display:none;}' +
+      '.about-page{flex:0 0 100%;scroll-snap-align:center;padding:0 26px;box-sizing:border-box;}' +
+      '.about-page>:first-child{margin-top:0;}' +
+      '.about-dots{display:flex;justify-content:center;gap:9px;margin-top:18px;}' +
+      '.about-dot{width:7px;height:7px;border-radius:50%;border:none;padding:0;cursor:pointer;' +
+      'background:rgba(150,154,168,0.3);transition:background .2s, transform .2s;}' +
+      '.about-dot.on{background:var(--accent, #5cd9ff);transform:scale(1.25);}' +
+      '.about-card .about-map{margin:14px 0 4px;padding-top:13px;' +
+      'border-top:1px solid rgba(128,128,128,0.22);font-size:12px;' +
+      'line-height:1.7;color:var(--dim, rgba(255,255,255,0.52));}' +
+      '.about-card .about-map b{color:var(--accent, #5cd9ff);font-weight:600;}' +
+      '.about-foot{display:flex;justify-content:space-between;align-items:center;' +
+      'margin-top:18px;gap:10px 16px;flex-wrap:wrap;}' +
+      '.about-foot a{color:var(--accent, #5cd9ff);text-decoration:none;' +
+      'font-size:11px;letter-spacing:0.12em;text-transform:uppercase;}' +
+      '.about-foot a.about-board::before{content:"\\2039\\00a0";}' +
+      '.about-foot a:hover,.about-foot a:focus-visible{text-decoration:underline;}' +
+      '.about-close{position:absolute;top:14px;right:14px;width:32px;height:32px;' +
+      'display:flex;align-items:center;justify-content:center;cursor:pointer;' +
+      'background:none;border:none;color:var(--dim, rgba(255,255,255,0.55));' +
+      "font:700 22px/1 'Atkinson Hyperlegible', ui-sans-serif, sans-serif;border-radius:4px;}" +
+      '.about-close:hover,.about-close:focus-visible{color:var(--accent, #5cd9ff);' +
+      'outline:2px solid var(--accent, #5cd9ff);outline-offset:1px;}';
+    var style = document.createElement('style');
+    style.textContent = css;
+    document.head.appendChild(style);
+
+    // ---- dialog DOM -----------------------------------------------------
+    var backdrop = document.createElement('div');
+    backdrop.className = 'about-backdrop';
+    backdrop.hidden = true;
+
+    var card = document.createElement('div');
+    card.className = 'about-card';
+    card.setAttribute('role', 'dialog');
+    card.setAttribute('aria-modal', 'true');
+    card.setAttribute('aria-labelledby', 'about-title');
+    card.tabIndex = -1;
+
+    var titleId = 'about-title';
+    card.innerHTML =
+      '<button class="about-close" type="button" aria-label="Close">×</button>' +
+      '<h2 id="' + titleId + '"></h2>' +
+      '<div class="about-body"></div>' +
+      '<div class="about-foot">' +
+        '<a class="about-board" href="/clocks/">all clocks</a>' +
+        '<a href="https://datapoems.io">data poems</a>' +
+        '<a href="https://lukesteuber.com">about me</a>' +
+      '</div>';
+    card.querySelector('h2').textContent = cfg.title || 'About this clock';
+    var bodyEl = card.querySelector('.about-body');
+    // cfg.pages (array of HTML strings) => a horizontal snap-scroll sequence with
+    // dots, so a long modal becomes a few swipeable pages. cfg.body => one column.
+    if (cfg.pages && cfg.pages.length) {
+      var phtml = '<div class="about-pages">';
+      for (var pi = 0; pi < cfg.pages.length; pi++) phtml += '<div class="about-page">' + cfg.pages[pi] + '</div>';
+      bodyEl.innerHTML = phtml + '</div><div class="about-dots"></div>';
+      var pagesEl = bodyEl.querySelector('.about-pages');
+      var dotsEl = bodyEl.querySelector('.about-dots');
+      cfg.pages.forEach(function (_, idx) {
+        var dot = document.createElement('button');
+        dot.type = 'button';
+        dot.className = 'about-dot' + (idx === 0 ? ' on' : '');
+        dot.setAttribute('aria-label', 'Page ' + (idx + 1));
+        dot.addEventListener('click', function () {
+          pagesEl.scrollTo({ left: idx * pagesEl.clientWidth, behavior: 'smooth' });
+        });
+        dotsEl.appendChild(dot);
+      });
+      pagesEl.addEventListener('scroll', function () {
+        var idx = Math.round(pagesEl.scrollLeft / Math.max(1, pagesEl.clientWidth));
+        for (var k = 0; k < dotsEl.children.length; k++) {
+          dotsEl.children[k].className = 'about-dot' + (k === idx ? ' on' : '');
+        }
+      }, { passive: true });
+    } else {
+      bodyEl.innerHTML = cfg.body;
+    }
+    // Optional per-clock board link, e.g. { label: 'Ciphers', href: '/clocks/numerals/' }.
+    var boardLink = card.querySelector('.about-board');
+    if (cfg.board && cfg.board.href) {
+      boardLink.setAttribute('href', cfg.board.href);
+      boardLink.textContent = cfg.board.label || 'back';
+    }
+
+    backdrop.appendChild(card);
+    document.body.appendChild(backdrop);
+
+    var closeBtn = card.querySelector('.about-close');
+    var lastFocus = null;
+
+    function focusables() {
+      return Array.prototype.slice.call(
+        card.querySelectorAll('a[href], button:not([disabled])')
+      );
+    }
+
+    function open() {
+      lastFocus = document.activeElement;
+      backdrop.hidden = false;
+      // force reflow so the opacity transition runs
+      void backdrop.offsetWidth;
+      backdrop.setAttribute('data-open', '');
+      card.focus();
+      document.addEventListener('keydown', onKey, true);
+    }
+
+    function close() {
+      backdrop.removeAttribute('data-open');
+      document.removeEventListener('keydown', onKey, true);
+      setTimeout(function () { backdrop.hidden = true; }, 200);
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+    }
+
+    function onKey(e) {
+      if (e.key === 'Escape') { e.preventDefault(); close(); return; }
+      if (e.key === 'Tab') {
+        var f = focusables();
+        if (!f.length) return;
+        var first = f[0], last = f[f.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault(); last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault(); first.focus();
+        }
+      }
+    }
+
+    backdrop.addEventListener('click', function (e) {
+      if (e.target === backdrop) close();
+    });
+    closeBtn.addEventListener('click', close);
+
+    // upgrade the "?" trigger to open the dialog (keep href as fallback).
+    // Relabel it: the original markup often labelled this control for its old
+    // job (a link to the gallery or my site), which is now misleading once it
+    // opens the explainer dialog. Name it for what it actually does.
+    trigger.setAttribute('role', 'button');
+    trigger.setAttribute('aria-haspopup', 'dialog');
+    trigger.setAttribute('aria-label', cfg.title ? 'About the ' + cfg.title + ' clock' : 'About this clock');
+    trigger.addEventListener('click', function (e) {
+      e.preventDefault();
+      open();
+    });
+  });
+})();
+</script>
+<!--/inlined:about-modal.js-->
+<script>if (window.self === window.top) { var g=document.createElement("script"); g.async=true; g.setAttribute("data-goatcounter","https://stats.dr.eamer.dev/count"); g.src="https://stats.dr.eamer.dev/count.js"; document.body.appendChild(g); }</script>
+</body>
+</html>
