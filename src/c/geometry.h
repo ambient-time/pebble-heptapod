@@ -58,7 +58,7 @@ static inline float hp_pressure(float u){
   return HP_PRESSURE[i]+(HP_PRESSURE[i+1]-HP_PRESSURE[i])*(x-i);
 }
 typedef struct { float x,y; } HPPoint;
-typedef struct { float cx,cy,r; int text_y; } HPLayout;
+typedef struct { float cx,cy,r; } HPLayout;
 // Caller-owned scratch storage keeps Pebble's small task stack clear. The
 // callbacks consume each polygon immediately; rendering is not recursive.
 typedef struct { HPPoint line[40],outline[HP_MAX_POINTS];float width[40]; } HPWorkspace;
@@ -82,16 +82,11 @@ static const float HP_DOTS[6][3] = {
 
 static inline HPLayout hp_layout(int w,int h,bool round) {
   float r=hp_min(w*(round?.253f:.28f),(h-42)/3.35f);
-  return (HPLayout){w*.5f,h*(round?.46f:.44f),r,h-(w>=190?34:29)};
+  return (HPLayout){w*.5f,h*(round?.46f:.44f),r};
 }
 static inline float hp_hour_angle(int h,int m) { return ((h%12)+m/60.f)*HP_TAU/12.f-HP_PI/2; }
 static inline float hp_minute_angle(int m,int s) { return (m+s/60.f)*HP_TAU/60.f-HP_PI/2; }
 static inline float hp_second_angle(int s) { return s*HP_TAU/60.f-HP_PI/2; }
-static inline void hp_time(char *out,unsigned size,int h,int m,bool twelve) {
-  if(twelve)snprintf(out,size,"%d:%02d",h%12?h%12:12,m);
-  else snprintf(out,size,"%02d:%02d",h,m);
-}
-
 // Pressure-expanded ribbon. Center-line tangent controls the width normal;
 // unlike a chain of discs this retains a sharp lifted-brush tip.
 static inline void hp_ribbon(HPWorkspace *work,int count,HPPolygon emit,void *user) {

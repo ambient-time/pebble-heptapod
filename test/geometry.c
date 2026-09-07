@@ -41,10 +41,6 @@ int main(void){
     }
   }
   const int sizes[][2]={{144,168},{200,228},{180,180},{260,260}};
-  char text[8];hp_time(text,sizeof(text),0,0,true);assert(!strcmp(text,"12:00"));
-  hp_time(text,sizeof(text),0,0,false);assert(!strcmp(text,"00:00"));
-  hp_time(text,sizeof(text),12,59,true);assert(!strcmp(text,"12:59"));
-  hp_time(text,sizeof(text),23,59,false);assert(!strcmp(text,"23:59"));
   assert(fabsf(hp_hour_angle(0,0)+HP_PI/2)<.0001f);
   assert(fabsf(hp_hour_angle(3,0))<.0001f);
   assert(fabsf(hp_minute_angle(30,0)-HP_PI/2)<.0001f);

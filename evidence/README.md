@@ -1,15 +1,16 @@
 # Native Heptapod review evidence
 
-Current captures and reports are version 0.1.1. `validation.json` pins the
-production PBW and source ZIP hashes and records six native target profiles.
-Each report names 26 adjacent, unmodified native PNG captures: ten time/rollover
-fixtures and sixteen one-second motion frames. No firmware boot image counts
-as face evidence.
+Current reports are version 0.1.2. `validation.json` pins the production PBW
+and source ZIP hashes and records six native target profiles. Each report names
+ten current time and rollover captures. Emery also has eight one-second motion
+frames. Only files named by a current report are current-release evidence;
+other retained motion captures belong to earlier releases. No firmware boot
+image counts as face evidence.
 
-`contact-sheet.png` arranges and scales native captures for inspection; it is
-not a new render. Rows are 10:08, natural noon rollover, and natural midnight
-rollover. `emery-motion.gif` sequences the sixteen Emery frames at one second
-per frame. Use the individual PNGs for native dimensions.
+`contact-sheet.png` arranges the current hero, quarter-hour, and evening
+captures at native dimensions. It is a derivative review sheet, not a new
+render. `emery-motion.gif` sequences the eight current Emery frames at one
+second per frame.
 
 `0.1.0-firmware/` retains historical firmware boot diagnostics, not watchface
 screenshots. Original 0.1.0 face captures are preserved in Git commit `6de97fc`;

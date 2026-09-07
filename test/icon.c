@@ -10,6 +10,6 @@ int main(int argc,char **argv){
   if(argc!=2)return 1;FILE *out=fopen(argv[1],"w");if(!out)return 2;
   fputs("<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><rect width=\"100\" height=\"100\" fill=\"white\"/><g fill=\"black\">\n",out);
   HPWorkspace work;
-  hp_glyph(&work,(HPLayout){50,50,28,0},10,8,20,0,polygon,dot,out);
+  hp_glyph(&work,(HPLayout){50,50,28},10,8,20,0,polygon,dot,out);
   fputs("</g></svg>\n",out);fclose(out);return 0;
 }

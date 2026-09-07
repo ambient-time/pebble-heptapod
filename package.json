@@ -1,15 +1,33 @@
 {
   "name": "heptapod",
   "author": "Luke Steuber",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "pebble": {
     "displayName": "Heptapod",
     "companyName": "Luke Steuber",
     "uuid": "037352f7-e3ea-4e4e-8d5d-5c823a12e494",
     "sdkVersion": "3",
-    "targetPlatforms": ["basalt", "diorite", "emery", "flint", "chalk", "gabbro"],
-    "watchapp": {"watchface": true},
-    "resources": {"media": [{"type":"bitmap","name":"IMAGE_MENU_ICON","file":"images/menu-icon.png","menuIcon":true}]}
+    "targetPlatforms": [
+      "basalt",
+      "diorite",
+      "emery",
+      "flint",
+      "chalk",
+      "gabbro"
+    ],
+    "watchapp": {
+      "watchface": true
+    },
+    "resources": {
+      "media": [
+        {
+          "type": "bitmap",
+          "name": "IMAGE_MENU_ICON",
+          "file": "images/menu-icon.png",
+          "menuIcon": true
+        }
+      ]
+    }
   }
 }

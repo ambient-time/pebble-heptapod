@@ -1,0 +1,123 @@
+{
+  "version": "0.1.2",
+  "pbwSHA256": "289849c6b6bf28bdabc7fa660eb191573bb9c8e840c3c7813a0370e3b66e1f4b",
+  "previousRelease": "heptapod-0.1.1.pbw",
+  "previousPBWSHA256": "5be3c545b1d099c84877630d761350e0d70248103492deb3efe8ba12ff0a88c2",
+  "uuid": "037352f7-e3ea-4e4e-8d5d-5c823a12e494",
+  "removedVisuals": [
+    "digital hour:minute caption"
+  ],
+  "resourcePayloads": {
+    "basalt": {
+      "identicalToPreviousRelease": true,
+      "sha256": "decbbb7b460c7cadb6c905f68d15e0fc13d4fe7f772eba826a4204f550b40fcb"
+    },
+    "diorite": {
+      "identicalToPreviousRelease": true,
+      "sha256": "decbbb7b460c7cadb6c905f68d15e0fc13d4fe7f772eba826a4204f550b40fcb"
+    },
+    "emery": {
+      "identicalToPreviousRelease": true,
+      "sha256": "decbbb7b460c7cadb6c905f68d15e0fc13d4fe7f772eba826a4204f550b40fcb"
+    },
+    "flint": {
+      "identicalToPreviousRelease": true,
+      "sha256": "decbbb7b460c7cadb6c905f68d15e0fc13d4fe7f772eba826a4204f550b40fcb"
+    },
+    "chalk": {
+      "identicalToPreviousRelease": true,
+      "sha256": "decbbb7b460c7cadb6c905f68d15e0fc13d4fe7f772eba826a4204f550b40fcb"
+    },
+    "gabbro": {
+      "identicalToPreviousRelease": true,
+      "sha256": "decbbb7b460c7cadb6c905f68d15e0fc13d4fe7f772eba826a4204f550b40fcb"
+    }
+  },
+  "pinnedReferences": {
+    "reference/README.md": "1c7bc064b6d1ffce64550e0caa3e85bb92552ebae11062f0e0f4070d46b3c64a",
+    "reference/source.html": "da8fab84c1f14bac107776367179db23fa00e84263261e92d87e5a45c27cdac8"
+  },
+  "checkedAt": "2026-09-07T05:50:43.183968+00:00",
+  "scope": "Native resource payload comparison with the prior release. Host tests verify the retained time mappings. Current native captures and independent source rebuild are recorded separately.",
+  "nativeVisualReview": {
+    "frames": [
+      {
+        "file": "basalt-hero.png",
+        "sha256": "5986a24190cedda6bc24832a8554a23195ee88dc031c7158f180e03ed3a734a9"
+      },
+      {
+        "file": "basalt-quarter.png",
+        "sha256": "bbc8ec74eacce35786e8a38587af8f830daf124b76e3c006cc245e4bf8f55fd5"
+      },
+      {
+        "file": "basalt-evening.png",
+        "sha256": "1a232b34242681063a349ffc48b16cbda568ded7fa03ce28bc5cc9956e6faca2"
+      },
+      {
+        "file": "chalk-hero.png",
+        "sha256": "1664ae4306c9aaf2068519a05d330ad25cca9b34f45fe4d3f6dde1aebaf868c3"
+      },
+      {
+        "file": "chalk-quarter.png",
+        "sha256": "4e3198b6128d1d8ba5d4901a4d981be846071f09206570795faad5729c781af7"
+      },
+      {
+        "file": "chalk-evening.png",
+        "sha256": "4ca54f0ec04fe59e0fedf9ae642ab9cf90d784c1df972c08c45126fa2fcc7e6c"
+      },
+      {
+        "file": "diorite-hero.png",
+        "sha256": "a8636d6e1778cef37eb76b10dab0fb7fcb677ee391129c3a8708a084abe3245d"
+      },
+      {
+        "file": "diorite-quarter.png",
+        "sha256": "0d53c96999e70992d54d1d2aac69013aec37161f94e50f9b60999a76fee0ddc1"
+      },
+      {
+        "file": "diorite-evening.png",
+        "sha256": "68447839442130c85850f8c131756bd7adcbda16503c9a829e064ca6df276974"
+      },
+      {
+        "file": "emery-hero.png",
+        "sha256": "3b86ad94c7dd3cd23c2c3e6e726968668ac30ee8f1a7d75341794abab81a8f55"
+      },
+      {
+        "file": "emery-quarter.png",
+        "sha256": "e62f118ce913a42619841bd7393f66d0232c17563a84ee924b8d0f1452cd2739"
+      },
+      {
+        "file": "emery-evening.png",
+        "sha256": "67bbaa1a770171ac242864ea2379b6305c9a35a04274844a9d13bf746c9a14aa"
+      },
+      {
+        "file": "flint-hero.png",
+        "sha256": "4f8eae3af12ec09d26e9b4dcca7c68a3b9c108587f47f6f2e8de3f4cce53be61"
+      },
+      {
+        "file": "flint-quarter.png",
+        "sha256": "b4f41778c72e0b6815e56c18c4930505e4c6d6385174355f26e2123d40a0eff7"
+      },
+      {
+        "file": "flint-evening.png",
+        "sha256": "23867ef3371e2d742425c15c5f1cbf5b395d62f4bfd5cf5fcc51f76adc7cd695"
+      },
+      {
+        "file": "gabbro-hero.png",
+        "sha256": "662b7016ba30d5b943e99f38d299422dff7a6a054b9148daf646edb781523ec8"
+      },
+      {
+        "file": "gabbro-quarter.png",
+        "sha256": "21bd3195900491df1987139fadfc94049725c724a5da0651f6f43341b47752e6"
+      },
+      {
+        "file": "gabbro-evening.png",
+        "sha256": "e15b8585825bcc08d1551fdb99e5982c2ddff1880a3f80204819cbdff1903e7c"
+      }
+    ],
+    "result": "The ink ring and three curling time tendrils retain their original composition on all six targets. No digital caption remains."
+  },
+  "optionalIconGenerator": {
+    "compiledWithWarningsAsErrors": true,
+    "generatedSVGIdenticalToExistingSource": true
+  }
+}

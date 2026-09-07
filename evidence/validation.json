@@ -1,11 +1,11 @@
 {
-  "version": "0.1.1",
+  "version": "0.1.2",
   "uuid": "037352f7-e3ea-4e4e-8d5d-5c823a12e494",
-  "pbwSHA256": "5be3c545b1d099c84877630d761350e0d70248103492deb3efe8ba12ff0a88c2",
-  "sourceZipSHA256": "4346741b56918cbc80db55885b65182efd6efe3eaf8e8eb5e1b8c24c01fc515b",
+  "pbwSHA256": "289849c6b6bf28bdabc7fa660eb191573bb9c8e840c3c7813a0370e3b66e1f4b",
+  "sourceZipSHA256": "7180747743cc6631d7cc3e2317a2d8e0831e224ea32152cdc452d118efa09aeb",
   "platforms": {
     "basalt": {
-      "capturedAt": "2026-09-06T06:23:25.050424+00:00",
+      "capturedAt": "2026-09-07T06:22:25.692192+00:00",
       "dimensions": [
         144,
         168
@@ -13,15 +13,15 @@
       "secondsChanged": true,
       "naturalNoonRollover": true,
       "naturalMidnightRollover": true,
-      "nativeFrameCount": 26,
+      "nativeFrameCount": 10,
       "loggedRenderMS": {
         "min": 4,
-        "max": 12
+        "max": 8
       },
-      "minimumLoggedFreeHeapBytes": 57300
+      "minimumLoggedFreeHeapBytes": 57572
     },
     "diorite": {
-      "capturedAt": "2026-09-06T06:21:13.070445+00:00",
+      "capturedAt": "2026-09-07T06:23:21.173920+00:00",
       "dimensions": [
         144,
         168
@@ -29,15 +29,15 @@
       "secondsChanged": true,
       "naturalNoonRollover": true,
       "naturalMidnightRollover": true,
-      "nativeFrameCount": 26,
+      "nativeFrameCount": 10,
       "loggedRenderMS": {
-        "min": 4,
-        "max": 12
+        "min": 3,
+        "max": 4
       },
-      "minimumLoggedFreeHeapBytes": 57596
+      "minimumLoggedFreeHeapBytes": 57844
     },
     "emery": {
-      "capturedAt": "2026-09-06T06:20:27.135342+00:00",
+      "capturedAt": "2026-09-07T06:23:55.676451+00:00",
       "dimensions": [
         200,
         228
@@ -45,15 +45,15 @@
       "secondsChanged": true,
       "naturalNoonRollover": true,
       "naturalMidnightRollover": true,
-      "nativeFrameCount": 26,
+      "nativeFrameCount": 18,
       "loggedRenderMS": {
         "min": 13,
-        "max": 21
+        "max": 20
       },
-      "minimumLoggedFreeHeapBytes": 122836
+      "minimumLoggedFreeHeapBytes": 123108
     },
     "flint": {
-      "capturedAt": "2026-09-06T06:24:10.073987+00:00",
+      "capturedAt": "2026-09-07T06:24:23.530994+00:00",
       "dimensions": [
         144,
         168
@@ -61,15 +61,15 @@
       "secondsChanged": true,
       "naturalNoonRollover": true,
       "naturalMidnightRollover": true,
-      "nativeFrameCount": 26,
+      "nativeFrameCount": 10,
       "loggedRenderMS": {
         "min": 3,
-        "max": 8
+        "max": 5
       },
-      "minimumLoggedFreeHeapBytes": 57596
+      "minimumLoggedFreeHeapBytes": 57844
     },
     "chalk": {
-      "capturedAt": "2026-09-06T06:21:56.905815+00:00",
+      "capturedAt": "2026-09-07T06:22:53.448215+00:00",
       "dimensions": [
         180,
         180
@@ -77,15 +77,15 @@
       "secondsChanged": true,
       "naturalNoonRollover": true,
       "naturalMidnightRollover": true,
-      "nativeFrameCount": 26,
+      "nativeFrameCount": 10,
       "loggedRenderMS": {
         "min": 4,
-        "max": 15
+        "max": 12
       },
-      "minimumLoggedFreeHeapBytes": 57300
+      "minimumLoggedFreeHeapBytes": 57572
     },
     "gabbro": {
-      "capturedAt": "2026-09-06T06:22:41.141147+00:00",
+      "capturedAt": "2026-09-07T06:24:50.665933+00:00",
       "dimensions": [
         260,
         260
@@ -93,12 +93,12 @@
       "secondsChanged": true,
       "naturalNoonRollover": true,
       "naturalMidnightRollover": true,
-      "nativeFrameCount": 26,
+      "nativeFrameCount": 10,
       "loggedRenderMS": {
         "min": 15,
-        "max": 22
+        "max": 20
       },
-      "minimumLoggedFreeHeapBytes": 122836
+      "minimumLoggedFreeHeapBytes": 123108
     }
   },
   "limits": "Local emulator-tested review candidate. Native PNGs require visual inspection. Not physical-watch power/readability evidence, CloudPebble import proof, or a store release."

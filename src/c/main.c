@@ -53,10 +53,6 @@ static void draw(Layer *layer,GContext *ctx){
   time_t epoch=time(NULL); struct tm now=*localtime(&epoch);
   float t=(float)(epoch%86400);
   hp_glyph(&s_work,l,now.tm_hour,now.tm_min,now.tm_sec,t,polygon,dot,ctx);
-  char label[8]; hp_time(label,sizeof(label),now.tm_hour,now.tm_min,!clock_is_24h_style());
-  graphics_context_set_text_color(ctx,GColorBlack);
-  graphics_draw_text(ctx,label,fonts_get_system_font(b.size.w>=190?FONT_KEY_GOTHIC_24:FONT_KEY_GOTHIC_18),
-    GRect(0,l.text_y,b.size.w,30),GTextOverflowModeTrailingEllipsis,GTextAlignmentCenter,NULL);
   bool sample=s_frame++<3 || s_last_minute!=now.tm_hour*60+now.tm_min;
   s_last_minute=now.tm_hour*60+now.tm_min;
   if(sample){
