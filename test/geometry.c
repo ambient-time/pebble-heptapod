@@ -49,8 +49,13 @@ int main(void){
     w=sizes[d][0];h=sizes[d][1];round_face=w==h;
     for(int second=0;second<86400;second+=37){
       count=dots=0;
-      hp_glyph(&work,hp_layout(w,h,round_face),second/3600,second/60%60,second%60,(float)second,poly,dot,NULL);
-      assert(count==21&&dots==6);
+      for(int digital=0;digital<2;digital++){
+        HPLayout layout=hp_layout(w,h,round_face);
+        layout.cy=(h-(digital?(w>=200?38:32):0))*.5f;
+        count=dots=0;
+        hp_glyph(&work,layout,second/3600,second/60%60,second%60,(float)second,poly,dot,NULL);
+        assert(count==21&&dots==6);
+      }
     }
   }
   w=200;h=228;round_face=false;signature=0;
@@ -58,5 +63,5 @@ int main(void){
   double first=signature;signature=0;
   hp_glyph(&work,hp_layout(w,h,false),10,8,21,0,poly,dot,NULL);
   assert(fabs(signature-first)>1); // Time markers move even with atmosphere frozen.
-  puts("Heptapod geometry: 9,344 time/profile samples fit; 21 ribbons, six blots; time format and cardinal angles pass.");
+  puts("Heptapod geometry: 18,688 time/profile/clock-option samples fit; 21 ribbons, six blots; time format and cardinal angles pass.");
 }

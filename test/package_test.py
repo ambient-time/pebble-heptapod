@@ -38,11 +38,11 @@ class PackageTests(unittest.TestCase):
         (self.root / 'reference/source.html').write_text('<!doctype html><title>Test reference</title>')
         self.source = {'name': 'heptapod', 'author': 'Luke Steuber', 'version': '0.1.1',
                        'pebble': {'uuid': package.UUID, 'companyName': 'Luke Steuber',
-                                  'targetPlatforms': list(package.SIZES)}}
+                                  'targetPlatforms': list(package.SIZES), 'capabilities':['configurable'], 'messageKeys':{'DIGITAL':1,'CALM':2}}}
         self.save_source()
         self.info = {'uuid': package.UUID, 'versionLabel': '0.1.1', 'companyName': 'Luke Steuber',
                      'watchapp': {'watchface': True}, 'targetPlatforms': list(package.SIZES),
-                     'capabilities': [], 'appKeys': {}, 'resources': {'media': [{'menuIcon': True}]}}
+                     'capabilities': ['configurable'], 'appKeys': {'DIGITAL':1,'CALM':2}, 'resources': {'media': [{'menuIcon': True}]}}
         self.pbw = self.root / 'build' / 'renamed-import.pbw'
         self.write_pbw()
 
@@ -74,7 +74,7 @@ class PackageTests(unittest.TestCase):
                 frames.append('build/evidence/' + filename)
             report = {'platform': platform, 'pbwSHA256': package.sha(self.pbw),
                       'capturedAt': '2026-09-06T08:00:00+00:00', 'secondsChanged': True,
-                      'naturalNoonRollover': True, 'naturalMidnightRollover': True,
+                      'naturalNoonRollover': True, 'naturalMidnightRollover': True, 'settingsAppliedAndPersisted': True,
                       'frames': frames, 'logs': [f'Heptapod time={stamp}:00 frame_ms=4 free=10000'
                                                 for stamp in ('10:08', '11:59', '12:00', '03:15', '18:30', '23:59', '00:00')]}
             (folder / f'{platform}-report.json').write_text(json.dumps(report))
@@ -181,7 +181,7 @@ class PackageTests(unittest.TestCase):
         self.assertEqual(summary['sourceZipSHA256'], package.sha(archive))
         self.assertEqual(package.sha(release / 'heptapod-0.1.1.pbw'), digest)
         self.assertIn(digest, (release / 'SHA256SUMS').read_text())
-        captures = self.root / 'evidence'
+        captures = self.root / 'evidence' / self.source['version']
         report = json.loads((captures / 'basalt-report.json').read_text())
         self.assertTrue(all('/' not in name and 'boot' not in name for name in report['frames']))
         self.assertEqual(summary['platforms']['basalt']['loggedRenderMS'], {'min': 4, 'max': 4})

@@ -107,7 +107,7 @@ static inline void hp_arc(HPWorkspace *work,HPLayout l,const float *d,float t,HP
   int steps=hp_round((d[1]-d[0])*16); if(steps<10)steps=10;
   for(int i=0;i<=steps;i++){
     float u=(float)i/steps,a=d[0]+(d[1]-d[0])*u;
-    float wob=.018f*hp_sin(a*3+d[3]*5)+.011f*hp_sin(a*7+1.3f)+.006f*hp_sin(a*5-t/.95f+d[3]*4);
+    float wob=.018f*hp_sin(a*3+d[3]*5)+.011f*hp_sin(a*7+1.3f)+.014f*hp_sin(a*5-t/.95f+d[3]*4);
     float rr=l.r*(1+d[3]*.05f+wob);
     float pressure=d[2]*(.22f+.78f*hp_pressure(u));
     line[i]=(HPPoint){l.cx+hp_cos(a)*rr,l.cy+hp_sin(a)*rr};
@@ -120,8 +120,8 @@ static inline void hp_flourish(HPWorkspace *work,HPLayout l,float a,float length
   HPPoint *line=work->line; float *width=work->width;
   for(int i=0;i<=24;i++){
     float u=i/24.f;
-    float aa=a+curl*u+.045f*hp_sin(t/1.25f+a*1.7f)*u;
-    float rr=l.r+dir*length*u+l.r*.01f*hp_sin(t/1.7f+a)*u;
+    float aa=a+curl*u+.11f*hp_sin(t/1.25f+a*1.7f)*u;
+    float rr=l.r+dir*length*u+l.r*.025f*hp_sin(t/1.7f+a)*u;
     line[i]=(HPPoint){l.cx+hp_cos(aa)*rr,l.cy+hp_sin(aa)*rr};
     width[i]=size*(.1f+.8f*HP_TAPER[i]);
     if(i==24)width[i]=0;

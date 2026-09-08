@@ -55,7 +55,7 @@ def validate_build(root):
     require(pebble['uuid'] == UUID, 'Heptapod UUID must be preserved')
     targets = pebble['targetPlatforms']
     require(len(targets) == len(SIZES) and set(targets) == set(SIZES), 'Expected exactly six target platforms')
-    require(not pebble.get('capabilities') and not pebble.get('appKeys'), 'Source must remain offline without app keys')
+    require(pebble.get('capabilities')==['configurable'] and pebble.get('messageKeys')=={'DIGITAL':1,'CALM':2}, 'Source must declare only local face settings')
     # The SDK names its bundle after the checkout directory, including imported ZIPs.
     pbw = root / 'build' / f'{root.name}.pbw'
     with zipfile.ZipFile(pbw) as archive:
@@ -67,7 +67,7 @@ def validate_build(root):
         require(manifest['watchapp']['watchface'] is True, 'PBW is not a watchface')
         declared = manifest['targetPlatforms']
         require(len(declared) == len(SIZES) and set(declared) == set(SIZES), 'PBW target mismatch')
-        require(not manifest['capabilities'] and not manifest['appKeys'], 'PBW must remain offline without app keys')
+        require(manifest['capabilities']==['configurable'] and manifest['appKeys']=={'DIGITAL':1,'CALM':2}, 'PBW must declare only local face settings')
         require(any(item.get('menuIcon') for item in manifest['resources']['media']), 'Missing menu icon')
         for platform in sorted(SIZES):
             contents = json.loads(archive.read(f'{platform}/manifest.json'))
@@ -86,7 +86,7 @@ def validate_evidence(evidence, digest):
         report = json.loads((evidence / f'{platform}-report.json').read_text())
         require(report['platform'] == platform, f'{platform}: wrong report platform')
         require(report['pbwSHA256'] == digest, f'{platform}: stale evidence')
-        for flag in ('secondsChanged', 'naturalNoonRollover', 'naturalMidnightRollover'):
+        for flag in ('secondsChanged', 'naturalNoonRollover', 'naturalMidnightRollover', 'settingsAppliedAndPersisted'):
             require(report.get(flag) is True, f'{platform}: missing {flag}')
         logs = report['logs']
         require(not any(any(term in line.lower() for term in ('fault', 'crash', 'allocation failed'))
@@ -137,8 +137,8 @@ def stage(root, evidence, source, pbw, digest, reports):
         for file in files:
             archive.write(file, file.relative_to(root))
         require(archive.testzip() is None, 'Corrupt source ZIP')
-    captures = root / 'evidence'
-    captures.mkdir(exist_ok=True)
+    captures = root / 'evidence' / source['version']
+    captures.mkdir(parents=True, exist_ok=True)
     summary = {'version': source['version'], 'uuid': UUID, 'pbwSHA256': digest,
                'sourceZipSHA256': sha(archive_path), 'platforms': {}}
     for platform, report in reports.items():

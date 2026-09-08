@@ -4,22 +4,27 @@ A broken ring of ink tells local time. Three tendrils grow from their clock
 positions: long for hours, medium for minutes, short for seconds. Twelve stays
 at the top as the ring breathes and the brush tips sway.
 
-Native C watchface, version 0.1.2. One PBW and UUID cover Time 2 (Emery),
+Native C watchface, version 0.1.3. One PBW and UUID cover Time 2 (Emery),
 2 SE (Diorite), Time/Time Steel (Basalt), 2 Duo (Flint), Time Round (Chalk), and
 Round 2 (Gabbro). Emulator checks do not measure physical-watch battery use.
-It runs offline without settings or external libraries. Animation updates once
-per second.
+It tells time offline. Local phone settings can hide the bottom digital clock
+or select Calm motion. The clock is shown by default and follows the watch’s
+12/24-hour preference. Atmospheric motion requests four updates per second;
+Calm motion freezes the mist and updates time once per second. Drawing pauses
+when another app takes focus.
 
 [Pebble Appstore](https://apps.repebble.com/eed88192a6a24a229eceb50c) ·
-[PBW](release/heptapod-0.1.2.pbw) · [Source ZIP](release/heptapod-0.1.2-source.zip)
-· [Checksums](release/SHA256SUMS) · [Native capture sheet](evidence/contact-sheet.png)
-· [Time 2 motion preview](evidence/emery-motion.gif) · [Source notes](reference/README.md)
+[PBW](release/heptapod-0.1.3.pbw) · [Source ZIP](release/heptapod-0.1.3-source.zip)
+· [Checksums](release/SHA256SUMS) · [Native capture sheet](evidence/0.1.3/options-contact-sheet.png)
+· [Time 2 motion preview](evidence/0.1.3/emery-motion-0.1.3.gif) · [Source notes](reference/README.md)
 
 Release files and native captures accompany the canonical project; the source
 ZIP contains only the files needed to build, test, and reproduce those captures.
 Version 0.1.1 corrects author metadata and adds portable packaging and natural
 rollover checks. It keeps the renderer and UUID from 0.1.0. Version 0.1.2
-removes the digital caption at Luke’s request and preserves the glyph layout.
+removed the digital caption. Version 0.1.3 restores it by default, makes it
+optional, recenters the glyph when hidden, and restores moving mist. This
+update is a local review candidate; the store link may show the earlier release.
 
 ## Adaptation
 
@@ -30,16 +35,16 @@ proportions of all three time tendrils. Arrival inspired the design; it has no
 official affiliation and does not translate the film's fictional language.
 
 Native pressure-expanded ribbons form the brush outline. The port includes no
-perfect-freehand code or film glyph assets. Color Pebbles use a light, dithered
-vignette; monochrome uses black ink on white. The watch keeps the breathing,
-swaying outline at 1 Hz and leaves out the browser's blurred smoke. Holding
-the glyph upright keeps twelve in a fixed position. These changes adapt the
-browser design to the watch's display and update rate.
+perfect-freehand code or film glyph assets. Both color and monochrome
+Pebbles use drifting, dithered clouds and a blurred ink halo. A bounded
+half-resolution mask supplies the smoke; the native outline stays sharp enough
+to preserve the small tendrils. Brush tips sway further than in the earlier
+port. Holding the glyph upright keeps twelve in a fixed position.
 
 Geometry has no hidden clock state. A caller-owned workspace avoids large
 stack arrays, firmware trig replaces desktop libm, and small sampled pressure
 curves preserve the original taper. The host tests check approximation error,
-9,344 time/shape samples, motion with atmosphere frozen, and cardinal angles;
+18,688 time/shape/clock-option samples, motion with atmosphere frozen, and cardinal angles;
 a second run exercises fixed-point angle quantization.
 Both runs use AddressSanitizer and UndefinedBehaviorSanitizer.
 

@@ -21,10 +21,12 @@ weighted ink ring surrounds an empty center. Its radius breathes and tips sway.
 
 ## Native differences
 
-Pressure-expanded native polygons replace perfect-freehand and smoke-blur
-compositing. Color screens use static white/gray dithering; monochrome uses
-white. Ink is black. The silhouette updates once per second, with atmospheric
-phase derived from UTC seconds-of-day rather than page uptime. Global rotation
+Pressure-expanded native polygons replace perfect-freehand. A half-resolution
+blurred ink mask and four drifting cloud banks approximate the original smoke
+passes on color and monochrome displays using spatial dithering. Ink is black.
+Motion requests a 250 ms interval and consumes fractional seconds; Calm motion
+freezes atmospheric phase while the time marks still update each second.
+Atmospheric phase uses seconds-of-day rather than page uptime. Global rotation
 is omitted to retain the twelve-at-top anchor. Safe margins reduce the radius
 on round screens. The native HH:MM label follows the watch's 12/24 preference
 and omits the browser's visible seconds; the second tendril still advances.

@@ -21,7 +21,8 @@ os.environ['PATH']=toolchain+os.pathsep+os.environ['PATH']
 import png
 from pebble_tool.commands.screenshot import ScreenshotCommand
 from pebble_tool.commands.install import ToolAppInstaller
-from libpebble2.protocol.apps import AppRunState,AppRunStateStart
+from libpebble2.protocol.apps import AppRunState,AppRunStateStart,AppRunStateStop
+from libpebble2.services.appmessage import AppMessageService,Int32
 from libpebble2.protocol.logs import AppLogMessage,AppLogShippingControl
 import pebble_tool.sdk.emulator as emulator
 from libpebble2.communication.transports.qemu.protocol import QemuButton
@@ -108,12 +109,26 @@ def run(platform,fresh=False,record=0):
             grab('record-00',(10,8,20))
             start=time.monotonic()
             for i in range(1,record):
-                time.sleep(max(0,start+i-time.monotonic()))
+                time.sleep(max(0,start+i*.25-time.monotonic()))
                 grab(f'record-{i:02d}')
+        messages=AppMessageService(watch)
+        for digital in [0,1]:
+            start=len(logs)
+            messages.send_message(APP,{1:Int32(digital),2:Int32(1)})
+            time.sleep(1)
+            assert any('Face settings digital='+str(digital)+' calm=1' in line for line in logs[start:]), 'Settings not applied'
+            grab('clock-'+str(digital),(10,8,20))
+        start=len(logs)
+        watch.send_packet(AppRunState(data=AppRunStateStop(uuid=APP)))
+        time.sleep(.5)
+        watch.send_packet(AppRunState(data=AppRunStateStart(uuid=APP)))
+        time.sleep(1)
+        assert any('Face settings digital=1 calm=1' in line for line in logs[start:]), 'Settings not persisted'
+        grab('settings-restarted',(10,8,20))
         assert any('Heptapod' in line for line in logs),'No native app frame log'
         assert not any('crash' in line.lower() or 'fault' in line.lower() for line in logs),'Native fault logged'
         report={'platform':platform,'pbwSHA256':hashlib.sha256(PBW.read_bytes()).hexdigest(),
-                'capturedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                'settingsAppliedAndPersisted':True,'capturedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),
                 'secondsChanged':True,'naturalNoonRollover':True,'naturalMidnightRollover':True,
                 'frames':frames,'logs':logs,
                 'limits':'Isolated emulator. Frames require visual inspection; not physical-device power/readability evidence.'}
@@ -127,7 +142,7 @@ if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('platform',choices=['emery','diorite','basalt','flint','chalk','gabbro'])
     parser.add_argument('--fresh',action='store_true',help='Use a new isolated profile; preserve existing flash images.')
-    parser.add_argument('--record',type=int,default=0,help='Also capture 0–60 one-second frames without changing the watch clock.')
+    parser.add_argument('--record',type=int,default=0,help='Also capture 0–60 quarter-second frames without changing the watch clock.')
     args=parser.parse_args()
     if not 0<=args.record<=60:parser.error('--record must be between 0 and 60')
     run(args.platform,args.fresh,args.record)
