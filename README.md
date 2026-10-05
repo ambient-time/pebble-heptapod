@@ -1,13 +1,13 @@
 # Heptapod for Pebble
 
-The current revision targets round Chalk and Gabbro watches. Older releases and their target declarations remain archived.
+The current revision supports Basalt, Chalk, Diorite, Emery, Flint and Gabbro. Circular artwork uses uniform scaling on rectangular and round screens. Older releases remain archived.
 
 A broken ring of ink tells local time. Three tendrils grow from their clock
 positions: long for hours, medium for minutes, short for seconds. Twelve stays
 at the top as the ring breathes and the brush tips sway.
 
-Native C watchface, version 0.1.4. One PBW and UUID cover Time Round (Chalk)
-and Round 2 (Gabbro). Emulator checks do not measure physical-watch battery use.
+Native C watchface, version 0.1.5. One PBW and UUID cover Pebble Time, Time Round,
+Pebble 2, Time 2, Pebble 2 Duo and Round 2. Emulator checks do not measure physical-watch battery use.
 It tells time offline. Local phone settings can hide the bottom digital clock
 or select Calm motion. The clock is shown by default and follows the watch’s
 12/24-hour preference. Atmospheric motion requests four updates per second;
@@ -59,7 +59,7 @@ From this directory, including after unpacking the source ZIP into a new folder:
 ```sh
 make build PYTHON=python3
 python3 test/package_test.py
-python3 test/emulator.py chalk --fresh
+python3 test/emulator.py basalt --fresh
 python3 test/emulator.py gabbro --fresh
 make package PYTHON=python3
 ```
@@ -76,6 +76,6 @@ from the same geometry, using ImageMagick only to rasterize it.
 
 ## Physical-watch follow-up
 
-Test the PBW on Time Round and Round 2 for outdoor readability and day-long battery
+Test the PBW on each supported watch for outdoor readability and day-long battery
 use. Review the dithered backdrop at actual watch size. The Pebble store release
 uses the locally built, emulator-tested package. Garmin remains a separate port.
