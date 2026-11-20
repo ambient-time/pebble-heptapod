@@ -1,14 +1,13 @@
 # Heptapod source reference
 
-Luke Steuber's [Heptapod B](https://datapoems.io/clocks/heptapod/) source is
-preserved byte-for-byte in `source.html`, copied September 5, 2026 from
-`clocks/heptapod/index.html`.
+The source of my [Heptapod B](https://datapoems.io/clocks/heptapod/) web clock
+is preserved byte for byte in `source.html`, copied September 5, 2026.
 
 SHA-256: `da8fab84c1f14bac107776367179db23fa00e84263261e92d87e5a45c27cdac8`.
 
 The archive is reference material, not a runtime dependency. It includes the
 original page's external font and perfect-freehand imports; the native C
-watchface uses neither. Luke Steuber's MIT license covers the native code and
+watchface uses neither. The MIT license covers the native code and the
 original page; third-party libraries retain their own licenses and are not
 bundled in this port.
 
@@ -31,8 +30,6 @@ is omitted to retain the twelve-at-top anchor. Safe margins reduce the radius
 on round screens. The native HH:MM label follows the watch's 12/24 preference
 and omits the browser's visible seconds; the second tendril still advances.
 
-These are explicit fidelity/readability/battery tradeoffs, not claims that
-every omitted effect is impossible on Pebble. Physical-watch daylight
-readability and sustained battery use remain unmeasured. The clock is an
-Arrival-inspired interpretation, not an official product or fictional-language
-translation.
+These are deliberate trade-offs between fidelity, readability and battery
+use. The clock is an interpretation inspired by *Arrival*, not an official
+product or a translation of the film's fictional language.

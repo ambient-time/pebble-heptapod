@@ -1,60 +1,56 @@
 # Heptapod for Pebble
 
-The current revision supports Basalt, Chalk, Diorite, Emery, Flint and Gabbro. Circular artwork uses uniform scaling on rectangular and round screens. Older releases remain archived.
+![Heptapod on six Pebble watches](evidence/contact-sheet.png)
 
-A broken ring of ink tells local time. Three tendrils grow from their clock
-positions: long for hours, medium for minutes, short for seconds. Twelve stays
-at the top as the ring breathes and the brush tips sway.
+A Pebble watchface where a broken ring of ink tells the time. Three tendrils
+grow from their clock positions: long for hours, medium for minutes, short for
+seconds. Twelve stays at the top while the ring breathes and the brush tips
+sway in drifting mist.
 
-Native C watchface, version 0.1.5. One PBW and UUID cover Pebble Time, Time Round,
-Pebble 2, Time 2, Pebble 2 Duo and Round 2. Emulator checks do not measure physical-watch battery use.
-It tells time offline. Local phone settings can hide the bottom digital clock
-or select Calm motion. The clock is shown by default and follows the watch’s
-12/24-hour preference. Atmospheric motion requests four updates per second;
-Calm motion freezes the mist and updates time once per second. Drawing pauses
-when another app takes focus.
+[Get it on the Pebble Appstore](https://apps.repebble.com/eed88192a6a24a229eceb50c).
+Version 0.1.5 runs on Pebble Time and Time Steel (Basalt), Pebble Time Round
+(Chalk), Pebble 2 (Diorite), Pebble Time 2 (Emery), Pebble 2 Duo (Flint) and
+Pebble Round 2 (Gabbro). One package covers all six. The round artwork is
+scaled evenly to fit rectangular screens.
 
-[Pebble Appstore](https://apps.repebble.com/eed88192a6a24a229eceb50c) ·
-[PBW](release/heptapod-0.1.3.pbw) · [Source ZIP](release/heptapod-0.1.3-source.zip)
-· [Checksums](release/SHA256SUMS) · [Native capture sheet](evidence/0.1.3/options-contact-sheet.png)
-· [Time 2 motion preview](evidence/0.1.3/emery-motion-0.1.3.gif) · [Source notes](reference/README.md)
+It works offline. Two settings in the Pebble phone app:
 
-Release files and native captures accompany the canonical project; the source
-ZIP contains only the files needed to build, test, and reproduce those captures.
-Version 0.1.1 corrects author metadata and adds portable packaging and natural
-rollover checks. It keeps the renderer and UUID from 0.1.0. Version 0.1.2
-removed the digital caption. Version 0.1.3 restores it by default, makes it
-optional, recenters the glyph when hidden, and restores moving mist. This
-update is a local review candidate; the store link may show the earlier release.
+- **Bottom digital clock**: on by default. It follows the watch's 12/24-hour
+  setting.
+- **Calm motion**: off by default. Normal motion redraws four times a second;
+  calm motion freezes the mist and updates once a second.
 
-## Adaptation
+Drawing pauses when another app takes focus.
 
-Source: Luke Steuber's supplied [Heptapod B clock](https://datapoems.io/clocks/heptapod/),
-archived locally as [reference/source.html](reference/source.html). This port
-keeps its six arcs, twelve ornamental flourishes, six ink blots, and the
-proportions of all three time tendrils. Arrival inspired the design; it has no
-official affiliation and does not translate the film's fictional language.
+The face is inspired by the film *Arrival*. It is not affiliated with the film
+and does not translate its fictional language. It contains no film glyph
+assets.
 
-Native pressure-expanded ribbons form the brush outline. The port includes no
-perfect-freehand code or film glyph assets. Both color and monochrome
-Pebbles use drifting, dithered clouds and a blurred ink halo. A bounded
-half-resolution mask supplies the smoke; the native outline stays sharp enough
-to preserve the small tendrils. Brush tips sway further than in the earlier
-port. Holding the glyph upright keeps twelve in a fixed position.
+## How it works
 
-Geometry has no hidden clock state. A caller-owned workspace avoids large
-stack arrays, firmware trig replaces desktop libm, and small sampled pressure
-curves preserve the original taper. The host tests check approximation error,
-18,688 time/shape/clock-option samples, motion with atmosphere frozen, and cardinal angles;
-a second run exercises fixed-point angle quantization.
-Both runs use AddressSanitizer and UndefinedBehaviorSanitizer.
+I made the original [Heptapod B clock](https://datapoems.io/clocks/heptapod/)
+for the web; its HTML is kept in [reference/source.html](reference/source.html).
+This port keeps its six arcs, twelve ornamental flourishes, six ink blots and
+the proportions of the three time tendrils.
 
-## Reproduce
+The brush outline is built from native pressure-expanded ribbons; the port
+uses none of the web version's freehand-drawing library. Color and
+black-and-white watches both get drifting, dithered clouds and a blurred ink
+halo. A half-resolution mask supplies the smoke, while the outline stays sharp
+enough to keep the small tendrils visible.
 
-Tested toolchain: Pebble Tool 5.0.39 / SDK 4.33.1, a C compiler with sanitizers,
-and the Python environment used by pebble-tool (includes `libpebble2` and
-`pypng`). Set `PYTHON` if the shell's `python3` uses another environment.
-From this directory, including after unpacking the source ZIP into a new folder:
+The geometry keeps no hidden clock state. A caller-owned workspace avoids
+large stack arrays, firmware trig replaces desktop libm, and small sampled
+pressure curves keep the original taper. See
+[reference/README.md](reference/README.md) for the differences from the web
+version.
+
+## Build and test
+
+You need Pebble SDK 4.33.1 with pebble-tool 5.0.39, a C compiler with
+sanitizers, and the Python environment that comes with pebble-tool (it
+includes `libpebble2` and `pypng`). Set `PYTHON` if your shell's `python3` is a
+different environment.
 
 ```sh
 make build PYTHON=python3
@@ -64,18 +60,24 @@ python3 test/emulator.py gabbro --fresh
 make package PYTHON=python3
 ```
 
-`--fresh` creates a new isolated profile without erasing any existing flash.
-The harness installs the production PBW, waits for logged confirmation of
-each requested time, verifies second-to-second image changes, observes natural
-noon and midnight transitions, and captures native screenshots. It never
-connects to a physical watch or cloud relay. Reports pin the PBW's SHA-256;
-packaging checks each payload's size and STM32 CRC before staging the release.
-The source ZIP excludes emulator profiles and build caches.
-`make icon` regenerates the 25×25 menu icon
-from the same geometry, using ImageMagick only to rasterize it.
+`make build` runs the geometry tests first. They check 18,688 time, shape and
+clock-option samples, motion with the atmosphere frozen, and cardinal angles,
+then run again with fixed-point angles. Both runs use AddressSanitizer and
+UndefinedBehaviorSanitizer.
 
-## Physical-watch follow-up
+`test/emulator.py` creates a new, isolated emulator profile, installs the
+production PBW, checks second-to-second changes and the noon and midnight
+rollovers, and saves screenshots. It never connects to a real watch.
+`make package` checks each payload's size and CRC and builds a source ZIP.
+`make icon` regenerates the 25×25 menu icon from the same geometry; it needs
+ImageMagick.
 
-Test the PBW on each supported watch for outdoor readability and day-long battery
-use. Review the dithered backdrop at actual watch size. The Pebble store release
-uses the locally built, emulator-tested package. Garmin remains a separate port.
+`release/` holds the 0.1.0, 0.1.1 and 0.1.2 packages. The screenshots in
+`evidence/` (including [a motion preview](evidence/emery-motion.gif)) come
+from 0.1.2, which had no digital clock. Build logs in earlier commits and the
+release archives contain absolute paths from the original build machine.
+
+## License
+
+MIT. See [LICENSE](LICENSE). The web version's font and drawing library are
+not part of this port.
